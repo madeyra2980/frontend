@@ -1,0 +1,469 @@
+/* Kömek — палитра под логотип: тёмно-синий, зелёный, красный, жёлтый */
+
+:root {
+  /* Цвета логотипа */
+  --color-brand-dark-blue: #0d2840;
+  --color-brand-green: #16a34a;
+  --color-brand-red: #dc2626;
+  --color-brand-yellow: #eab308;
+
+  --color-bg: #f0f4f8;
+  --color-surface: #ffffff;
+  --color-header: var(--color-brand-dark-blue);
+  --color-header-text: #ffffff;
+  --color-accent: var(--color-brand-green);
+  --color-accent-hover: #15803d;
+  --color-accent-light: #dcfce7;
+  --color-text: #0d2840;
+  --color-text-secondary: #475569;
+  --color-border: #cbd5e1;
+  --color-error: var(--color-brand-red);
+  --color-success: var(--color-brand-green);
+  --color-warning: var(--color-brand-yellow);
+  --shadow-sm: 0 1px 3px rgba(13, 40, 64, 0.08);
+  --shadow-md: 0 4px 12px rgba(13, 40, 64, 0.1);
+  --shadow-lg: 0 8px 24px rgba(13, 40, 64, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --header-height: 56px;
+  --sidebar-width: 280px;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Кнопки в стиле Uber/Yandex */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: background 0.2s, transform 0.05s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-header-text);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Поля ввода */
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-secondary);
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+/* Карточки контента */
+.page-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card h1, .card h2, .card h3 {
+  margin-top: 0;
+  color: var(--color-text);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.success-message {
+  color: var(--color-success);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+/* Dashboard: карта и поиск */
+.dashboard-map-wrap {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  min-height: 320px;
+}
+
+/* Контейнер карты Leaflet обязан иметь высоту */
+.dashboard-map-wrap .leaflet-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.dashboard-map-wrap .map-search-card {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  max-width: 360px;
+  margin: 0;
+}
+
+/* Кнопка «Моё местоположение» на карте (как в Google/Яндекс картах) */
+.map-locate-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.map-locate-btn:hover:not(:disabled) {
+  background: var(--color-bg);
+  transform: scale(1.05);
+}
+
+.map-locate-btn:disabled {
+  opacity: 0.8;
+  cursor: wait;
+}
+
+.map-locate-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: map-locate-spin 0.8s linear infinite;
+}
+
+@keyframes map-locate-spin {
+  to { transform: rotate(360deg); }
+}
+
+.map-search-row {
+  display: flex;
+  gap: 8px;
+}
+
+.map-search-row input {
+  flex: 1;
+  margin: 0;
+}
+
+.location-suggestions {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  max-height: 200px;
+  overflow: auto;
+}
+
+.suggestion-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s;
+}
+
+.suggestion-btn:last-child {
+  border-bottom: none;
+}
+
+.suggestion-btn:hover {
+  background: var(--color-bg);
+}
+
+.specialty-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.specialty-chips .btn {
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.specialty-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-list .order-item {
+  margin-bottom: 0;
+}
+
+.order-specialty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Кнопка «Создать заявку» снизу экрана */
+.dashboard-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 28px;
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(22, 163, 74, 0.4);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.3s ease,
+              box-shadow 0.2s ease;
+}
+
+.dashboard-fab:hover {
+  transform: translateX(-50%) scale(1.03);
+  box-shadow: 0 6px 24px rgba(22, 163, 74, 0.45);
+}
+
+.dashboard-fab:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+.dashboard-fab--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.dashboard-fab-text {
+  display: inline;
+}
+
+/* Затемнение под панелью */
+.bottom-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+
+.bottom-sheet-backdrop--visible {
+  background: rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+}
+
+/* Панель формы снизу вверх — живая анимация */
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  max-height: 85vh;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+
+.bottom-sheet--open {
+  transform: translateY(0);
+}
+
+.bottom-sheet__handle {
+  padding: 12px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bottom-sheet__handle span {
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.bottom-sheet__handle:hover span {
+  background: var(--color-text-secondary);
+}
+
+.bottom-sheet__content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(85vh - 44px);
+  padding: 0 16px 32px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bottom-sheet-card {
+  margin-bottom: 16px;
+}
+
+/* Статус «В поиске специалиста» — без закрытия панели */
+.bottom-sheet--searching .bottom-sheet__handle {
+  cursor: default;
+}
+
+.bottom-sheet--searching .bottom-sheet__handle:hover span {
+  background: var(--color-border);
+}
+
+.order-status-search__title {
+  margin-top: 0;
+  color: var(--color-accent);
+}
+
+.order-status-search__message {
+  font-size: 1rem;
+  margin: 8px 0 4px;
+}
+
+.order-status-search__hint {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 12px 0 0;
+}
