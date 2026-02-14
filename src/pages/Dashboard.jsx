@@ -72,6 +72,9 @@ export default function Dashboard() {
   const [createdOrder, setCreatedOrder] = useState(null);
   const [pollingOrder, setPollingOrder] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [showGeoModal, setShowGeoModal] = useState(false);
+  const [geoRequesting, setGeoRequesting] = useState(false);
+  const [geoError, setGeoError] = useState('');
 
   useEffect(() => {
     specialties()
@@ -98,21 +101,11 @@ export default function Dashboard() {
       .catch(() => {});
   }, []);
 
+  // Показываем модалку запроса геолокации при загрузке (не вызываем getCurrentPosition сразу — на телефоне лучше после действия пользователя)
   useEffect(() => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        setCenter([lat, lng]);
-        if (!position) {
-          setPosition([lat, lng]);
-          reverseGeocode(lat, lng).then(setAddressText);
-        }
-      },
-      () => {},
-      { enableHighAccuracy: true }
-    );
+    if (navigator.geolocation) {
+      setShowGeoModal(true);
+    }
   }, []);
 
   const handlePositionChange = useCallback(async (lat, lng) => {
@@ -120,6 +113,32 @@ export default function Dashboard() {
     setAddressText('Загрузка...');
     const addr = await reverseGeocode(lat, lng);
     setAddressText(addr);
+  }, []);
+
+  const requestGeolocation = useCallback(() => {
+    if (!navigator.geolocation) return;
+    setGeoError('');
+    setGeoRequesting(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        setCenter([lat, lng]);
+        setPosition([lat, lng]);
+        reverseGeocode(lat, lng).then(setAddressText);
+        setShowGeoModal(false);
+        setGeoRequesting(false);
+      },
+      (err) => {
+        setGeoRequesting(false);
+        setGeoError(
+          err.code === 1
+            ? 'Доступ к геолокации запрещён. Вы можете указать адрес вручную или нажать на карту.'
+            : 'Не удалось определить местоположение. Попробуйте ещё раз или укажите адрес вручную.'
+        );
+      },
+      { enableHighAccuracy: true }
+    );
   }, []);
 
   const handleMyLocation = useCallback(() => {
@@ -229,6 +248,37 @@ export default function Dashboard() {
 
   return (
     <div>
+      {/* Модальное окно запроса доступа к геопозиции (важно для смартфонов) */}
+      {showGeoModal && (
+        <div className="geo-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="geo-modal-title">
+          <div className="geo-modal">
+            <h2 id="geo-modal-title" className="geo-modal__title">Доступ к геолокации</h2>
+            <p className="geo-modal__text">
+              Чтобы показать ваше местоположение на карте и быстрее создавать заявки, разрешите доступ к геопозиции в этом браузере.
+            </p>
+            {geoError && <p className="geo-modal__error">{geoError}</p>}
+            <div className="geo-modal__actions">
+              <button
+                type="button"
+                className="btn btn-primary geo-modal__btn"
+                onClick={requestGeolocation}
+                disabled={geoRequesting}
+              >
+                {geoRequesting ? 'Определяем…' : 'Разрешить'}
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary geo-modal__btn"
+                onClick={() => { setShowGeoModal(false); setGeoError(''); }}
+                disabled={geoRequesting}
+              >
+                Позже
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="dashboard-map-wrap">
           {locationSuggestions.length > 0 && (
             <ul className="location-suggestions">
